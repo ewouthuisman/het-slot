@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Het Slot &middot; Week 2</title>
+<meta name="description" content="Vier weken. Vier stukken. E&eacute;n bestemming.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Karla:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#14161d; --ink-2:#1b1e28; --sand:#e6cb96; --sand-dim:#a68f68;
+    --teal:#74a3a6; --paper:#d9dae2; --muted:#82869a; --line:#2c3140; --w:40rem;
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    margin:0; background:var(--ink);
+    background-image:radial-gradient(120% 60% at 50% -10%, #1e2230 0%, transparent 60%);
+    color:var(--paper);
+    font:400 1.0625rem/1.65 "Karla","Segoe UI",system-ui,sans-serif;
+    padding:0 1.125rem 4rem;
+  }
+  .wrap { max-width:var(--w); margin:0 auto; }
+  [hidden] { display:none !important; }
+
+  header { display:flex; align-items:center; gap:1rem; padding:2.25rem 0 1.5rem; }
+  .lock { flex:0 0 auto; width:48px; height:64px; }
+  .lock .frame { fill:none; stroke:var(--line); stroke-width:2; stroke-linecap:round; }
+  .lock .pin { fill:var(--line); transition:fill .45s ease, transform .45s cubic-bezier(.34,1.4,.5,1); }
+  .lock .pin.set { fill:var(--sand); transform:translateY(-5px); }
+
+  h1 { font:300 2.0625rem/1 "Fraunces",Georgia,serif;
+       font-variation-settings:"SOFT" 40,"WONK" 1;
+       letter-spacing:-.01em; margin:0; color:var(--sand); }
+  .kicker { font:600 .6875rem/1 "JetBrains Mono",ui-monospace,monospace;
+            letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin:0 0 .45rem; }
+
+  .progress { display:grid; grid-template-columns:repeat(4,1fr); gap:.375rem;
+    margin:0 0 1.75rem; padding:.5rem 0;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .step { padding:.625rem .25rem .5rem; border-radius:.375rem;
+    font-family:"JetBrains Mono",ui-monospace,monospace; color:var(--line);
+    display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+  .step .num { font-size:1.125rem; font-weight:600; }
+  .step .lab { font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; }
+  .step.done { color:var(--sand-dim); }
+  .step.now  { color:var(--sand); background:var(--ink-2); }
+
+  .lead { font:300 1.375rem/1.4 "Fraunces",Georgia,serif;
+          font-variation-settings:"SOFT" 30; color:var(--sand); margin:0 0 1.25rem; }
+  p { margin:0 0 1.05rem; }
+  .dim { color:var(--muted); }
+  .rule { border:0; border-top:1px solid var(--line); margin:2rem 0 1.5rem; }
+  .eyebrow { font:600 .6875rem/1 "JetBrains Mono",ui-monospace,monospace;
+             letter-spacing:.16em; text-transform:uppercase; color:var(--teal); margin:0 0 .85rem; }
+
+  ol.riddles { list-style:none; counter-reset:r; margin:0; padding:0; }
+  ol.riddles li { counter-increment:r; display:grid; grid-template-columns:3.25rem 1fr;
+    gap:.9rem; padding:.8rem 0; border-bottom:1px solid var(--line); }
+  ol.riddles li::before { content:counter(r);
+    font:600 .875rem/1.5 "JetBrains Mono",ui-monospace,monospace;
+    color:var(--sand-dim); text-align:right; }
+  ol.riddles.marked li::before { content:attr(data-mark); font-size:.8125rem; }
+  .len { color:var(--muted); font:400 .8125rem/1 "JetBrains Mono",monospace; }
+
+  pre { background:var(--ink-2); border:1px solid var(--line);
+    border-left:2px solid var(--sand-dim); border-radius:.25rem;
+    padding:.9rem .95rem; margin:0 0 1.15rem;
+    font:400 .8125rem/1.7 "JetBrains Mono",ui-monospace,monospace;
+    color:var(--sand); overflow-x:auto; white-space:pre; letter-spacing:.04em;
+    -webkit-user-select:all; user-select:all; }
+  pre.grid { font-size:1.5rem; line-height:1.55; letter-spacing:.5em; text-align:center;
+    padding:1.25rem .5rem; border-left-width:1px; }
+
+  .hint { border:1px solid var(--line); border-radius:.375rem;
+    background:linear-gradient(180deg,#1d212c 0%,var(--ink-2) 100%);
+    padding:1.15rem 1.25rem; margin:0 0 1.15rem; }
+  .hint .eyebrow { margin-bottom:.7rem; }
+  .hint p { font:300 1.125rem/1.55 "Fraunces",Georgia,serif; font-style:italic;
+    font-variation-settings:"SOFT" 30; color:var(--sand); margin:0 0 .55rem; }
+  .hint p:last-child { margin-bottom:0; }
+
+  details.hintbox { border:1px solid var(--line); border-radius:.375rem;
+    background:var(--ink-2); margin:0 0 1.15rem; }
+  details.hintbox > summary { cursor:pointer; list-style:none; padding:.95rem 1.15rem;
+    font:600 .75rem/1 "JetBrains Mono",ui-monospace,monospace;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+  details.hintbox > summary::-webkit-details-marker { display:none; }
+  details.hintbox > summary::before { content:"\002B\00A0\00A0"; }
+  details.hintbox[open] > summary::before { content:"\2212\00A0\00A0"; }
+  details.hintbox .body { padding:0 1.25rem 1.2rem; border-top:1px solid var(--line); }
+  details.hintbox .body p { font:300 1.125rem/1.55 "Fraunces",Georgia,serif; font-style:italic;
+    font-variation-settings:"SOFT" 30; color:var(--sand); margin:1rem 0 .55rem; }
+  details.hintbox .body p:last-child { margin-bottom:0; }
+
+  .note { background:var(--ink-2); border-left:2px solid var(--teal);
+    padding:.95rem 1.05rem; margin:0 0 1.15rem; border-radius:.25rem; }
+  .note p:last-child { margin:0; }
+
+  footer { margin-top:3rem; padding-top:1.25rem; border-top:1px solid var(--line);
+    font:400 .8125rem/1.6 "JetBrains Mono",ui-monospace,monospace;
+    color:var(--muted); letter-spacing:.05em; text-align:center; }
+
+  /* ---------- poortspel ---------- */
+  /* tijdens het spel de kop compacter, zodat het bord in beeld past */
+  body.gating header { padding:1.1rem 0 .6rem; }
+  body.gating h1 { font-size:1.6rem; }
+  body.gating .lock { width:38px; height:50px; }
+  body.gating .progress { margin-bottom:1rem; }
+  /* ruimte onder het bord zodat de D-pad nooit over het speelveld valt */
+  #gate.has-dpad { padding-bottom:10.5rem; }
+  .gtitle { font:300 1.375rem/1.35 "Fraunces",Georgia,serif; color:var(--sand); margin:0 0 .4rem; }
+  .ghow { color:var(--muted); font-size:.9375rem; margin:0 0 .9rem; }
+  .gstat { font:600 .8125rem/1.4 "JetBrains Mono",ui-monospace,monospace;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--teal);
+    display:flex; justify-content:space-between; gap:.75rem; margin:0 0 .55rem; }
+  canvas { display:block; margin:0 auto; background:var(--ink-2);
+    border:1px solid var(--line); border-radius:.375rem;
+    touch-action:none; image-rendering:auto; }
+  .gmsg { min-height:1.5rem; margin:.75rem 0 0; color:var(--sand); font-size:.9375rem; text-align:center; }
+  .gbtn { appearance:none; background:var(--ink-2); border:1px solid var(--line);
+    color:var(--sand); border-radius:.375rem; padding:.6rem 1.1rem; cursor:pointer;
+    font:600 .75rem/1 "JetBrains Mono",monospace; letter-spacing:.1em;
+    text-transform:uppercase; display:block; margin:.85rem auto 0; }
+
+  #ttt { display:grid; grid-template-columns:repeat(3,1fr); gap:.375rem;
+    max-width:16rem; margin:0 auto; }
+  #ttt button { aspect-ratio:1; font:600 2rem/1 "Fraunces",Georgia,serif; color:var(--sand);
+    background:var(--ink-2); border:1px solid var(--line); border-radius:.375rem;
+    cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  #ttt button.o { color:var(--teal); }
+
+  /* ---------- D-pad ---------- */
+  .dpad { position:fixed; right:.7rem; bottom:calc(.7rem + env(safe-area-inset-bottom));
+    width:8.25rem; height:8.25rem;
+    display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+    gap:.2rem; opacity:.30; z-index:50; touch-action:none; transition:opacity .2s; }
+  .dpad.on { opacity:.66; }
+  .dpad button { appearance:none; border:1px solid var(--sand-dim);
+    background:rgba(230,203,150,.10); color:var(--sand); border-radius:.5rem;
+    font-size:.95rem; line-height:1; padding:0; touch-action:none;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
+    -webkit-touch-callout:none; }
+  .dpad button.pressed { background:rgba(230,203,150,.32); }
+  .dpad .up{grid-area:1/2/2/3} .dpad .left{grid-area:2/1/3/2}
+  .dpad .right{grid-area:2/3/3/4} .dpad .down{grid-area:3/2/4/3}
+  /* alleen links/rechts (pong): lager, zodat het speelveld vrij blijft */
+  .dpad.lr { height:4.25rem; grid-template-rows:1fr; }
+  .dpad.lr .left { grid-area:1/1/2/2; } .dpad.lr .right { grid-area:1/3/2/4; }
+  @media (min-width:48rem){ .dpad{ opacity:.20; } }
+
+  @media (max-width:26rem) {
+    body { font-size:1rem; padding:0 .875rem 3rem; }
+    h1 { font-size:1.75rem; }
+    pre.grid { font-size:1.25rem; letter-spacing:.35em; }
+    ol.riddles li { grid-template-columns:2.5rem 1fr; gap:.7rem; }
+    .hint p, details.hintbox .body p { font-size:1.0625rem; }
+  }
+  @media (prefers-reduced-motion:reduce){ *,*::before,*::after{ transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="lock" viewBox="0 0 48 64" aria-hidden="true">
+      <path class="frame" d="M14 26 V16 a10 10 0 0 1 20 0 v10"/>
+      <rect class="frame" x="5" y="26" width="38" height="34" rx="5"/>
+      <rect class="pin set" x="11" y="44" width="5" height="9" rx="2.5"/>
+      <rect class="pin set" x="20" y="44" width="5" height="9" rx="2.5"/>
+      <rect class="pin" x="29" y="44" width="5" height="9" rx="2.5"/>
+      <rect class="pin" x="38" y="44" width="5" height="9" rx="2.5"/>
+    </svg>
+    <div>
+      <p class="kicker">Vier weken &middot; vier stukken &middot; &eacute;&eacute;n bestemming</p>
+      <h1>Het Slot</h1>
+    </div>
+  </header>
+
+  <div class="progress" aria-label="Week 2 van vier">
+    <span class="step done"><span class="num">1</span><span class="lab">Week</span></span>
+    <span class="step now"><span class="num">2</span><span class="lab">Week</span></span>
+    <span class="step"><span class="num">3</span><span class="lab">Week</span></span>
+    <span class="step"><span class="num">4</span><span class="lab">Week</span></span>
+  </div>
+
+  <noscript>
+    <style>#gate,.dpad{display:none !important}</style>
+    <div class="note">
+      <p class="eyebrow">Dit werkt hier niet</p>
+      <p><strong>Je kijkt naar een voorbeeldweergave.</strong> WhatsApp, Mail en Bestanden
+         tonen bijlagen in een kijkvenster dat geen spellen kan draaien. Dat is een
+         beperking van de iPhone zelf &mdash; er is geen knop om het hier aan te zetten.</p>
+      <p>Open dit bestand op een <strong>computer</strong> of <strong>Android-telefoon</strong>,
+         of vraag om de link.</p>
+    </div>
+  </noscript>
+
+  <section id="gate" class="has-dpad">
+    <p class="eyebrow">De wacht</p>
+    <p class="gtitle">Tetris &mdash; haal 1000 punten</p>
+    <p class="ghow">Rijen leveren 100, 300, 500 of 800 punten. Links/rechts schuiven, omhoog draaien, omlaag laten vallen. Loopt hij vol, dan begint de teller opnieuw.</p>
+    <div class="gstat" id="stat"></div>
+    <canvas id="cv" style="height:40vh;max-height:20rem;width:auto;"></canvas>
+    <p class="gmsg" id="msg"></p>
+  </section>
+  <div class="dpad" id="dpad">
+    <button class="up"    data-k="up"    aria-label="omhoog">&#9650;</button>
+    <button class="left"  data-k="left"  aria-label="links">&#9664;</button>
+    <button class="right" data-k="right" aria-label="rechts">&#9654;</button>
+    <button class="down"  data-k="down"  aria-label="omlaag">&#9660;</button>
+  </div>
+
+<div id="content" hidden>
+  <section>
+    <p class="lead">Een bericht dat alleen opengaat met het woord van vorige week.</p>
+    <p>Het is versleuteld met een <strong>autokey</strong> &mdash; ook wel <em>autoclave</em> genoemd.
+       Dat is een Vigen&egrave;re die zichzelf verlengt: de sleutel begint met jullie woord van vorige
+       week en loopt daarna door in de tekst zelf.</p>
+
+    <div class="note">
+      <p>Zoek op <em>autoclave decoder</em> of <em>autokey cipher decoder</em>. Kies de variant
+         waarbij de sleutel wordt aangevuld met de <strong>klare tekst</strong>, niet met de
+         cijfertekst. Sleutel erin, tekst erin, klaar.</p>
+      <p class="dim">Een gewone Vigen&egrave;re-decoder werkt hier <strong>niet</strong>: dan klopt
+         het begin misschien nog, maar loopt de rest vast in onzin. Let dus op welke je pakt.</p>
+    </div>
+
+    <p class="dim">Spaties en leestekens zijn verwijderd. Die moeten jullie zelf terugzien.</p>
+
+    <hr class="rule">
+    <p class="eyebrow">De cijfertekst</p>
+<pre>MANHE GIERY EDXLB BWLFR QXWWM EEIYH HSZRM DSCEH ZBRHP PVJIO
+ESGWZ SVXQP HHYBO RYNSK IAGEG QALEE TMISC EYWIC DPLEE ATMTD</pre>
+
+    <div class="note">
+      <p>Krijgen jullie na het ontcijferen nog steeds onzin te zien? Dan hebben jullie het
+         goed gedaan. Er is &eacute;&eacute;n simpele handeling die alles leesbaar maakt.</p>
+    </div>
+
+    <details class="hintbox">
+      <summary>Vastgelopen?</summary>
+      <div class="body">
+        <p>Ik heb mijn laatste woord het eerst opgeschreven.</p>
+        <p>Er is geen tweede sleutel nodig. Alleen een spiegel &mdash; en die kost niets.</p>
+      </div>
+    </details>
+
+    <hr class="rule">
+    <p>Wat eruit komt is &eacute;&eacute;n <strong>rekenregel</strong>. Meer staat er niet in, en meer is
+       er ook niet nodig. <strong>Schrijf hem letterlijk over en zet hem apart.</strong></p>
+    <p class="dim">Over twee weken is dit weggescrold en dan heeft niemand er nog iets aan.</p>
+  </section>
+</div>
+
+  <footer>Bewaar alles. Ik herhaal niets.</footer>
+</div>
+<script>
+(function(){
+var UKEY='hetslot-w2';
+
+var held={}, cool={}, dpad=document.getElementById('dpad');
+var gate=document.getElementById('gate'), content=document.getElementById('content');
+
+function setk(k,v){ held[k]=v; if(!v) cool[k]=null; }
+if(dpad){
+  Array.prototype.forEach.call(dpad.querySelectorAll('button'),function(b){
+    var k=b.getAttribute('data-k');
+    function on(e){ e.preventDefault(); setk(k,1); b.classList.add('pressed'); dpad.classList.add('on'); }
+    function off(e){ e.preventDefault(); setk(k,0); b.classList.remove('pressed');
+                     if(!dpad.querySelector('.pressed')) dpad.classList.remove('on'); }
+    b.addEventListener('pointerdown',on);
+    b.addEventListener('pointerup',off);
+    b.addEventListener('pointercancel',off);
+    b.addEventListener('pointerleave',off);
+    b.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+  });
+}
+/* vangnet: laat nooit een toets 'blijven hangen' als de vinger buiten de knop loslaat */
+function clearAll(){
+  for(var k in held) setk(k,0);
+  if(dpad){
+    Array.prototype.forEach.call(dpad.querySelectorAll('button'),
+      function(b){ b.classList.remove('pressed'); });
+    dpad.classList.remove('on');
+  }
+}
+addEventListener('pointerup',clearAll);
+addEventListener('pointercancel',clearAll);
+addEventListener('blur',clearAll);
+document.addEventListener('visibilitychange',function(){ if(document.hidden) clearAll(); });
+
+var KMAP={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',
+          w:'up',s:'down',a:'left',d:'right'};
+addEventListener('keydown',function(e){ var k=KMAP[e.key]; if(k){ e.preventDefault(); setk(k,1); } });
+addEventListener('keyup',  function(e){ var k=KMAP[e.key]; if(k){ setk(k,0); } });
+
+/* edge-getriggerd, met optionele herhaling zolang de knop vastgehouden wordt */
+function tapped(k,now,delay,rate){
+  if(!held[k]){ cool[k]=null; return false; }
+  if(cool[k]==null){ cool[k] = delay ? now+delay : Infinity; return true; }
+  if(now>=cool[k]){ cool[k]=now+(rate||delay); return true; }
+  return false;
+}
+
+function reveal(save){
+  if(save){ try{ localStorage.setItem(UKEY,'1'); }catch(e){} }
+  if(gate) gate.hidden=true;
+  if(dpad) dpad.hidden=true;
+  document.body.classList.remove('gating');
+  content.hidden=false;
+  scrollTo(0,0);
+}
+var solved=false;
+try{ solved = localStorage.getItem(UKEY)==='1'; }catch(e){}
+if(solved){ reveal(false); } else { document.body.classList.add('gating'); }
+
+if(!solved){
+
+var COLS=10, ROWS=20, CS=24, DOEL=1000;
+var cv=document.getElementById('cv'), g2=cv.getContext('2d');
+cv.width=COLS*CS; cv.height=ROWS*CS;
+var msg=document.getElementById('msg'), stat=document.getElementById('stat');
+
+var SH=[
+ [[1,1,1,1]],
+ [[1,1],[1,1]],
+ [[0,1,0],[1,1,1]],
+ [[1,0,0],[1,1,1]],
+ [[0,0,1],[1,1,1]],
+ [[1,1,0],[0,1,1]],
+ [[0,1,1],[1,1,0]]
+];
+var COL=['#74a3a6','#e6cb96','#b48ead','#8fa876','#d08b6a','#c9736f','#7d95c4'];
+var bd=[], score=0, done=false;
+for(var y=0;y<ROWS;y++){ bd[y]=[]; for(var x=0;x<COLS;x++) bd[y][x]=0; }
+
+function rot(m){
+  var r=[];
+  for(var x=0;x<m[0].length;x++){ r[x]=[]; for(var y=m.length-1;y>=0;y--) r[x].push(m[y][x]); }
+  return r;
+}
+var cur, cx, cy, ci, fall=0, SPEED=650;
+function spawn(){
+  ci=Math.floor(Math.random()*7); cur=SH[ci].map(function(r){return r.slice();});
+  cx=Math.floor((COLS-cur[0].length)/2); cy=0;
+  if(hit(cur,cx,cy)){
+    for(var y=0;y<ROWS;y++) for(var x=0;x<COLS;x++) bd[y][x]=0;
+    score=0; msg.textContent='Vol. Opnieuw \u2014 de teller staat weer op nul.';
+    cx=Math.floor((COLS-cur[0].length)/2); cy=0;
+  }
+}
+function hit(m,ox,oy){
+  for(var y=0;y<m.length;y++) for(var x=0;x<m[y].length;x++){
+    if(!m[y][x]) continue;
+    var nx=ox+x, ny=oy+y;
+    if(nx<0||nx>=COLS||ny>=ROWS) return true;
+    if(ny>=0&&bd[ny][nx]) return true;
+  }
+  return false;
+}
+function lock(){
+  for(var y=0;y<cur.length;y++) for(var x=0;x<cur[y].length;x++)
+    if(cur[y][x]&&cy+y>=0) bd[cy+y][cx+x]=ci+1;
+  var n=0;
+  for(y=ROWS-1;y>=0;y--){
+    var full=true;
+    for(x=0;x<COLS;x++) if(!bd[y][x]) full=false;
+    if(full){ bd.splice(y,1); bd.unshift(new Array(COLS).fill(0)); n++; y++; }
+  }
+  if(n) score += [0,100,300,500,800][n];
+  if(score>=DOEL && !done){
+    done=true; msg.textContent='Doel gehaald. De poort gaat open\u2026';
+    setTimeout(function(){ reveal(true); },900);
+  }
+  spawn();
+}
+function draw(){
+  g2.fillStyle='#1b1e28'; g2.fillRect(0,0,cv.width,cv.height);
+  g2.strokeStyle='#232735'; g2.lineWidth=1;
+  for(var x=1;x<COLS;x++){ g2.beginPath(); g2.moveTo(x*CS,0); g2.lineTo(x*CS,cv.height); g2.stroke(); }
+  for(var y=0;y<ROWS;y++) for(x=0;x<COLS;x++) if(bd[y][x]){
+    g2.fillStyle=COL[bd[y][x]-1]; g2.fillRect(x*CS+1,y*CS+1,CS-2,CS-2);
+  }
+  if(cur) for(y=0;y<cur.length;y++) for(x=0;x<cur[y].length;x++) if(cur[y][x]&&cy+y>=0){
+    g2.fillStyle=COL[ci]; g2.fillRect((cx+x)*CS+1,(cy+y)*CS+1,CS-2,CS-2);
+  }
+  stat.innerHTML='<span>Punten '+score+'</span><span>Doel '+DOEL+'</span>';
+}
+function loop(t){
+  if(!done){
+    if(tapped('left',t,220,90)  && !hit(cur,cx-1,cy)) cx--;
+    if(tapped('right',t,220,90) && !hit(cur,cx+1,cy)) cx++;
+    if(tapped('up',t,0)){
+      var r=rot(cur);
+      if(!hit(r,cx,cy)) cur=r;
+      else if(!hit(r,cx-1,cy)){ cur=r; cx--; }
+      else if(!hit(r,cx+1,cy)){ cur=r; cx++; }
+    }
+    var sp = held['down'] ? 45 : SPEED;
+    if(t-fall>sp){ fall=t; if(!hit(cur,cx,cy+1)) cy++; else lock(); }
+  }
+  draw(); requestAnimationFrame(loop);
+}
+spawn(); requestAnimationFrame(loop);
+
+}
+})();
+</script>
+</body>
+</html>
