@@ -212,7 +212,7 @@
   <section id="gate" class="has-dpad">
     <p class="eyebrow">De wacht</p>
     <p class="gtitle">Tetris &mdash; haal 1000 punten</p>
-    <p class="ghow">Rijen leveren 100, 300, 500 of 800 punten. Links/rechts schuiven, omhoog draaien, omlaag laten vallen. Loopt hij vol, dan begint de teller opnieuw.</p>
+    <p class="ghow">Elke rij levert 100 punten &mdash; meer rijen tegelijk leveren niets extra. Tien rijen en de poort gaat open. Links/rechts schuiven, omhoog draaien, omlaag laten vallen. Loopt hij vol, dan begint de teller opnieuw.</p>
     <div class="gstat" id="stat"></div>
     <canvas id="cv" style="height:40vh;max-height:20rem;width:auto;"></canvas>
     <p class="gmsg" id="msg"></p>
@@ -386,7 +386,7 @@ function lock(){
     for(x=0;x<COLS;x++) if(!bd[y][x]) full=false;
     if(full){ bd.splice(y,1); bd.unshift(new Array(COLS).fill(0)); n++; y++; }
   }
-  if(n) score += [0,100,300,500,800][n];
+  if(n) score += n*100;
   if(score>=DOEL && !done){
     done=true; msg.textContent='Doel gehaald. De poort gaat open\u2026';
     setTimeout(function(){ reveal(true); },900);
