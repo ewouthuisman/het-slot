@@ -104,6 +104,15 @@
     font:400 .8125rem/1.6 "JetBrains Mono",ui-monospace,monospace;
     color:var(--muted); letter-spacing:.05em; text-align:center; }
 
+  nav.weeks { margin-top:2.5rem; padding-top:1.25rem; border-top:1px solid var(--line);
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:.45rem 1rem; }
+  nav.weeks .eyebrow { margin:0; }
+  nav.weeks a { font:600 .8125rem/1.5 "JetBrains Mono",ui-monospace,monospace;
+    letter-spacing:.08em; color:var(--sand-dim); text-decoration:none;
+    border-bottom:1px solid var(--line); padding-bottom:.12rem;
+    transition:color .2s ease, border-color .2s ease; }
+  nav.weeks a:hover, nav.weeks a:focus-visible { color:var(--sand); border-color:var(--sand-dim); }
+
   /* ---------- poortspel ---------- */
   /* tijdens het spel de kop compacter, zodat het bord in beeld past */
   body.gating header { padding:1.1rem 0 .6rem; }
@@ -255,6 +264,11 @@ ESGWZ SVXQP HHYBO RYNSK IAGEG QALEE TMISC EYWIC DPLEE ATMTD</pre>
        er ook niet nodig. <strong>Schrijf hem letterlijk over en zet hem apart.</strong></p>
     <p class="dim">Over twee weken is dit weggescrold en dan heeft niemand er nog iets aan.</p>
   </section>
+
+  <nav class="weeks" aria-label="Eerdere weken">
+    <p class="eyebrow">Eerdere weken</p>
+    <a href="../week-1/">&larr; Week 1 &mdash; teruglezen</a>
+  </nav>
 </div>
 
   <footer>Bewaar alles. Ik herhaal niets.</footer>
